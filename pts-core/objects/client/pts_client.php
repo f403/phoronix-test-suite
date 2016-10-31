@@ -30,6 +30,8 @@ class pts_client
 	protected static $phoromatic_servers = array();
 	protected static $debug_mode = false;
 	protected static $full_output = false;
+	
+	protected static $share_env_vars = false;
 
 	public static function create_lock($lock_file)
 	{
@@ -236,6 +238,9 @@ class pts_client
 			{
 				// This helps some test profiles build correctly if they don't do a cc check internally
 				$env_variables['CC'] = 'gcc';
+			}
+			if (pts_client::$share_env_vars){
+				$env_variables = array_merge($_SERVER, $env_variables);
 			}
 		}
 
@@ -1157,6 +1162,10 @@ class pts_client
 	}
 	public static function execute_command($command, $pass_args = null)
 	{
+		if (in_array('--share-env', $pass_args)){
+			pts_client::$share_env_vars = True;
+			$pass_args=array_diff($pass_args, ['--share-env']);
+		}
 		if(!class_exists($command, false) && is_file(PTS_COMMAND_PATH . $command . '.php'))
 		{
 			include(PTS_COMMAND_PATH . $command . '.php');
