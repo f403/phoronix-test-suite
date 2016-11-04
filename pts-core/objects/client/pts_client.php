@@ -241,6 +241,8 @@ class pts_client
 			}
 			if (pts_client::$share_env_vars){
 				$env_variables = array_merge($_SERVER, $env_variables);
+				$env_variables = array_diff_key($env_variables, array('PHP_SELF'=>0, 'SCRIPT_NAME'=>0, 'SCRIPT_FILENAME'=>0, 'PATH_TRANSLATED'=>0, 'DOCUMENT_ROOT'=>0, 'REQUEST_TIME_FLOAT'=>0, 'REQUEST_TIME'=>0, 'argv'=>0, 'argc'=>0));
+
 			}
 		}
 
